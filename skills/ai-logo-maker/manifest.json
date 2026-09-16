@@ -1,0 +1,79 @@
+{
+  "changelog": "Put brand colors in the prompt. One generate call returns two concepts unless you name one to four.",
+  "display_name": "AI Logo Maker",
+  "entry": "SKILL.md",
+  "homepage": "https://beatra.ai/skills/ai-logo-maker",
+  "icon": "https://beatra.ai/textures/icons/ai-logo-maker-0.1.0.png",
+  "localized": {
+    "en": {
+      "description": "Turn a brand name, industry, or reference image into a professional AI logo, brand mark, or app icon. This AI logo maker and logo generator explores multiple design directions from your brand brief—company name, industry feel, and color preferences—then refines the strongest concept with precise brand colors, clean geometry, and scalable composition. Create business logos, startup logos, monograms, emblems, and combination marks that stay sharp from favicon to storefront sign. Start from a text description, transform existing sketches and brand assets into a polished mark, or refine an accepted draft toward a publish-ready result.",
+      "display_name": "AI Logo Maker",
+      "summary": "Turn a brand name, industry, or reference image into a professional AI logo, brand mark, or app icon with multi-concept exploration, precise brand colors, and scalable composition.",
+      "tags": [
+        "AI logo maker",
+        "logo generator",
+        "AI logo design",
+        "logo creator",
+        "brand logo",
+        "business logo",
+        "company logo",
+        "startup logo",
+        "app icon",
+        "brand mark design",
+        "monogram logo",
+        "custom logo design"
+      ],
+      "title": "AI Logo Maker: Logo Generator & Brand Mark Design"
+    },
+    "ja": {
+      "description": "ブランド名、業種、または参考画像から、プロ品質の AI ロゴ、ブランドマーク、アプリアイコンを作成。この AI ロゴメーカーは、ブランドブリーフ（社名、業種の雰囲気、カラー設定）から複数のデザイン方向を探索し、最も強いコンセプトを正確なブランドカラー、クリーンな幾何学、スケーラブルな構図で仕上げます。企業ロゴ、スタートアップロゴ、モノグラム、エンブレム、コンビネーションマークなど、favicon から看板まで鮮明に認識できるデザインを作成。テキストから作成、既存のスケッチやブランド素材を洗練されたマークに変換、または承認済みのドラフトを公開可能な仕上がりへ精密調整。",
+      "display_name": "AI ロゴメーカー",
+      "summary": "ブランド名、業種、または参考画像から、プロ品質の AI ロゴ、ブランドマーク、アプリアイコンを作成。多バリアント探索、正確なブランドカラー、スケーラブルな構図に対応。",
+      "tags": [
+        "AIロゴメーカー",
+        "ロゴ作成",
+        "ロゴデザイン",
+        "ロゴジェネレーター",
+        "ロゴメーカー アプリ",
+        "会社ロゴ作成",
+        "ブランドロゴ",
+        "ロゴデザイン 簡単",
+        "アプリアイコン",
+        "ロゴマーク",
+        "エンブレム",
+        "スタートアップロゴ"
+      ],
+      "title": "AI ロゴメーカー：ロゴ生成とブランドマークデザイン"
+    },
+    "zh": {
+      "description": "输入品牌名称、行业方向或参考图,生成专业 AI Logo、品牌标识和应用图标。这款 AI logo 设计工具从你的品牌简报出发——公司名、行业气质、配色偏好——先探索多个设计方向,再用精确品牌色、简洁几何和可缩放构图精修最强概念。制作企业 logo、创业公司标志、字母标、徽章和组合标识,从网站 favicon 到门头招牌都清晰可辨。从文字描述出发,将已有草图和品牌素材转化为精致标识,或在已认可草稿上做定向精修。",
+      "display_name": "AI Logo设计·品牌标识创作",
+      "summary": "输入品牌名称、行业方向或参考图,生成专业 AI Logo、品牌标识和应用图标,支持多变体探索、精确品牌色和可缩放构图。",
+      "tags": [
+        "AI logo生成",
+        "logo设计",
+        "标志设计",
+        "品牌logo制作",
+        "公司logo设计",
+        "商标设计",
+        "logo在线制作",
+        "企业标志设计",
+        "创业公司logo",
+        "APP图标设计",
+        "品牌标识",
+        "VI设计"
+      ],
+      "title": "AI Logo 制作器：Logo 生成与品牌标识设计"
+    }
+  },
+  "mcp": {
+    "authentication": "device-bearer",
+    "credential_file": "~/.beatra/credentials.json",
+    "name": "beatra",
+    "transport": "streamable-http",
+    "url": "https://mcp.beatra.ai/mcp"
+  },
+  "name": "ai-logo-maker",
+  "schema_version": 1,
+  "version": "0.1.7"
+}
