@@ -14,6 +14,10 @@
 | **费用** | 安装免费。每次生成消耗 Beatra 账号积分，只有你明确要求这次生成或批准确认卡后才会付费。 |
 | **支持的 Agent** | Claude Code、Codex、OpenClaw |
 
+<p align="center"><img src="assets/hero.webp" width="800" alt="为虚构精品咖啡烘焙品牌 Brightmoss 探索的三个 logo 方向：咖啡豆与嫩叶组合标、带咖啡滴负形的 B 字母标、杯上日出徽章。由 Beatra AI 生成。"></p>
+
+*为虚构精品咖啡烘焙品牌 Brightmoss 探索的三个 logo 方向：咖啡豆与嫩叶组合标、带咖啡滴负形的 B 字母标、杯上日出徽章。由 Beatra AI 生成。*
+
 | Skill | Entry point | Version |
 | --- | --- | --- |
 | [`ai-logo-maker`](skills/ai-logo-maker) | [SKILL.md](skills/ai-logo-maker/SKILL.md) | 0.1.7 |
@@ -40,6 +44,18 @@ gh skill install beatra-ai/ai-logo-maker-skill ai-logo-maker
 
 ```text
 从 https://github.com/beatra-ai/ai-logo-maker-skill 安装 ai-logo-maker skill（目录 skills/ai-logo-maker），然后按它的 SKILL.md 连接我的 Beatra 账号。
+```
+
+## 效果示例
+
+<p align="center"><img src="assets/demo-2.webp" width="800" alt="选定的 Brightmoss 咖啡豆嫩叶方向，进一步细化为 App 图标和横版文字组合标。由 Beatra AI 生成。"></p>
+
+*选定的 Brightmoss 咖啡豆嫩叶方向，进一步细化为 App 图标和横版文字组合标。由 Beatra AI 生成。*
+
+提示词：
+
+```text
+Refine this accepted Brightmoss logo into a two-part brand presentation on one flat warm cream background (#F4EEE2). Left: an app icon, a solid rounded square in deep forest green (#1F4D3A) with the same coffee-bean-and-leaf symbol from the image centered inside in cream, generous padding, no text in the icon. Right: a horizontal lockup, the same green bean-and-leaf symbol placed to the left of the exact word "Brightmoss" in the same bold humanist sans-serif lettering, forest green, vertically centered with the symbol. Keep the symbol shape and the wordmark letterforms identical to the source. Flat vector, maximum two colors, no gradients, no shadows, no mockup, no tagline, no other text.
 ```
 
 ## 你能得到什么

@@ -14,6 +14,10 @@ Turn a brand name, industry, or reference image into logo concepts and a scalabl
 | **Cost** | Free to install. Each render uses credits on your Beatra account, and paid steps run only when you ask for that exact render or approve its card. |
 | **Works with** | Claude Code, Codex, OpenClaw |
 
+<p align="center"><img src="assets/hero.webp" width="800" alt="Three logo directions for a fictional specialty coffee roaster, Brightmoss: a bean-and-leaf combination mark, a B lettermark with a coffee-drop cutout, and a sun-over-cup emblem. AI-generated with Beatra."></p>
+
+*Three logo directions for a fictional specialty coffee roaster, Brightmoss: a bean-and-leaf combination mark, a B lettermark with a coffee-drop cutout, and a sun-over-cup emblem. AI-generated with Beatra.*
+
 | Skill | Entry point | Version |
 | --- | --- | --- |
 | [`ai-logo-maker`](skills/ai-logo-maker) | [SKILL.md](skills/ai-logo-maker/SKILL.md) | 0.1.7 |
@@ -41,6 +45,18 @@ Or paste this into your agent:
 
 ```text
 Install the ai-logo-maker skill from https://github.com/beatra-ai/ai-logo-maker-skill (folder skills/ai-logo-maker), then follow its SKILL.md to connect my Beatra account.
+```
+
+## Examples
+
+<p align="center"><img src="assets/demo-2.webp" width="800" alt="The chosen Brightmoss bean-and-leaf direction refined into an app icon and a horizontal wordmark lockup. AI-generated with Beatra."></p>
+
+*The chosen Brightmoss bean-and-leaf direction refined into an app icon and a horizontal wordmark lockup. AI-generated with Beatra.*
+
+Prompt:
+
+```text
+Refine this accepted Brightmoss logo into a two-part brand presentation on one flat warm cream background (#F4EEE2). Left: an app icon, a solid rounded square in deep forest green (#1F4D3A) with the same coffee-bean-and-leaf symbol from the image centered inside in cream, generous padding, no text in the icon. Right: a horizontal lockup, the same green bean-and-leaf symbol placed to the left of the exact word "Brightmoss" in the same bold humanist sans-serif lettering, forest green, vertically centered with the symbol. Keep the symbol shape and the wordmark letterforms identical to the source. Flat vector, maximum two colors, no gradients, no shadows, no mockup, no tagline, no other text.
 ```
 
 ## What you get
