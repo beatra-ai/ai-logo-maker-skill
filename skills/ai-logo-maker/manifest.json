@@ -1,5 +1,5 @@
 {
-  "changelog": "Put brand colors in the prompt. One generate call returns two concepts unless you name one to four.",
+  "changelog": "Connecting Beatra is smoother: the helper waits for your approval, and if you approve after it has stopped waiting, Beatra connects automatically the next time you use it, with no second approval.",
   "display_name": "AI Logo Maker",
   "entry": "SKILL.md",
   "homepage": "https://beatra.ai/skills/ai-logo-maker",
@@ -75,5 +75,5 @@
   },
   "name": "ai-logo-maker",
   "schema_version": 1,
-  "version": "0.1.7"
+  "version": "0.2.0"
 }

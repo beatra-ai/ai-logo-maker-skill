@@ -32,15 +32,17 @@ is the final charge.
 ## Handle structured failures
 
 - HTTP 401 authentication failure: do not replay the paid call automatically.
-  Run `scripts/authorize.py`, then recover with the original request identity
-  and unchanged arguments.
+  Run `python3 scripts/authorize.py` and follow its output
+  until it prints `Beatra is ready`, then recover with the original request
+  identity and unchanged arguments.
 - Timeout, DNS/TLS, HTTP 429, HTTP 5xx, or another transport failure: preserve
   the credential. If delivery of a paid call is uncertain, retry only with the
   same `client_request_id` and exactly the same arguments after connectivity
   recovers.
 - Insufficient scope: explain that the active connection lacks required access;
-  run `scripts/authorize.py --force` only after the user explicitly chooses to
-  reconnect the full Beatra authorization. Never ask for a media-specific grant.
+  run `python3 scripts/authorize.py --force` only after the
+  user explicitly chooses to reconnect the full Beatra authorization. Never ask
+  for a media-specific grant.
 - Insufficient balance (error code `insufficient_balance`): relay the returned
   message to the user — it already carries the facts that matter: nothing was
   charged, the top-up link, credits take effect immediately, and the same

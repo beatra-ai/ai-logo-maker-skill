@@ -20,12 +20,12 @@ from collections.abc import Callable
 from contextlib import suppress
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
 
 PROTOCOL_VERSION = "2025-11-25"
 PACKAGE_SLUG = "ai-logo-maker"
 PACKAGE_DISPLAY_NAME = "AI Logo Maker"
-PACKAGE_VERSION = "0.1.7"
+PACKAGE_VERSION = "0.2.0"
 PACKAGE_CHANNEL = "canonical"
 PACKAGE_LOCALE = "en"
 PACKAGE_DISCOVERY_URL = "https://beatra.ai/skills/ai-logo-maker/install.json"
@@ -56,14 +56,20 @@ PutBytes = Callable[[str, dict[str, str], bytes], dict[str, Any]]
 GetBytes = Callable[[str, float, int], bytes]
 MAX_UPLOAD_BYTES = 100 * 1024 * 1024
 AUTH_REQUIRED_CODE = "BEATRA_AUTH_REQUIRED"
-AUTH_REQUIRED_MESSAGE = (
-    f"{AUTH_REQUIRED_CODE}: Beatra authorization is no longer valid. "
-    "Run scripts/authorize.py to reconnect."
+RECONNECT_GUIDANCE = (
+    "Reconnect with `python3 scripts/authorize.py` and follow "
+    'its output until it prints "Beatra is ready".'
 )
+T = TypeVar("T")
+AUTH_REQUIRED_MESSAGE = f"{AUTH_REQUIRED_CODE}: Beatra authorization is no longer valid. {RECONNECT_GUIDANCE}"
 
 
 class AuthenticationRequired(RuntimeError):
     """The remote MCP endpoint definitively rejected the bearer credential."""
+
+
+class CredentialsMissing(RuntimeError):
+    """No usable credential file: this computer has not connected yet."""
 
 
 def _allowlisted_unauthorized_message(raw: bytes) -> str | None:
@@ -93,7 +99,7 @@ def _authentication_required_message(raw: bytes) -> str:
     message = _allowlisted_unauthorized_message(raw)
     if message is None:
         return AUTH_REQUIRED_MESSAGE
-    return f"{AUTH_REQUIRED_CODE}: {message}"
+    return f"{AUTH_REQUIRED_CODE}: {message} {RECONNECT_GUIDANCE}"
 
 
 def _require_status(status: int, accepted: set[int], operation: str) -> None:
@@ -1060,13 +1066,17 @@ def maybe_auto_update(
 def _credentials(state_dir: Path) -> tuple[str, str]:
     state_dir = state_dir.expanduser()
     path = state_dir / "credentials.json"
+    if not path.is_file():
+        # Not connected yet (or the file is gone): the caller may still find
+        # an approval waiting to be collected.
+        raise CredentialsMissing(f"Beatra credentials are missing. {RECONNECT_GUIDANCE}")
     try:
         value = json.loads(_read_private_credentials(state_dir, path))
         mcp_url = value["mcp_url"]
         token = value["access_token"]
         token_type = value["token_type"]
     except (OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
-        raise RuntimeError("Beatra credentials are missing; run scripts/authorize.py") from exc
+        raise CredentialsMissing(f"Beatra credentials are missing. {RECONNECT_GUIDANCE}") from exc
     if (
         not isinstance(mcp_url, str)
         or mcp_url != CANONICAL_MCP_URL
@@ -1074,7 +1084,7 @@ def _credentials(state_dir: Path) -> tuple[str, str]:
         or not token
         or token_type != "Bearer"
     ):
-        raise RuntimeError("Beatra credential file is invalid; authorize again")
+        raise CredentialsMissing("Beatra credential file is invalid; authorize again")
     return mcp_url, token
 
 
@@ -1497,25 +1507,92 @@ def upload(
     )
 
 
-def _run_command(command: str, tool_name: str | None = None) -> dict[str, Any]:
-    session = _session_with_registration(
-        state_dir=Path.home() / ".beatra",
-        post_json=_default_post_json,
-    )
-    if command == "tools":
-        return session.request(2, "tools/list", {})
+def _read_tool_arguments() -> dict[str, Any]:
     try:
         arguments = json.load(os.sys.stdin)
     except json.JSONDecodeError as exc:
         raise RuntimeError("Tool arguments on stdin must be one JSON object") from exc
     if not isinstance(arguments, dict):
         raise RuntimeError("Tool arguments on stdin must be one JSON object")
+    return arguments
+
+
+def _run_command(
+    command: str,
+    tool_name: str | None = None,
+    arguments: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    session = _session_with_registration(
+        state_dir=Path.home() / ".beatra",
+        post_json=_default_post_json,
+    )
+    if command == "tools":
+        return session.request(2, "tools/list", {})
+    if arguments is None:
+        arguments = _read_tool_arguments()
     assert tool_name is not None
     return session.request(
         2,
         "tools/call",
         {"name": tool_name, "arguments": arguments},
     )
+
+
+CollectApproval = Callable[[Path], tuple[str, str | None]]
+
+
+def _default_collect_approval(state_dir: Path) -> tuple[str, str | None]:
+    """The helper's one-check collection, when this package has it."""
+
+    import authorize  # the package's own helper, beside this file
+
+    collect = getattr(authorize, "collect_saved_approval", None)
+    if collect is None:
+        return "none", None
+    return collect(state_dir)
+
+
+def _connect_waiting_approval(
+    state_dir: Path,
+    collect: CollectApproval | None = None,
+) -> tuple[str, str | None]:
+    """Before giving up on a call with no working credential: an approval the
+    user already gave on this computer may be waiting to be collected (the
+    agent was stopped while they selected Allow). One quick check; anything
+    unexpected reads as nothing waiting, so the call fails as it always did."""
+
+    try:
+        outcome, link = (collect or _default_collect_approval)(state_dir)
+    except Exception:
+        return "none", None
+    if outcome not in {"collected", "pending", "unreachable", "none"}:
+        return "none", None
+    return outcome, link
+
+
+def _with_waiting_approval(
+    operation: Callable[[], T],
+    *,
+    state_dir: Path,
+    collect: CollectApproval | None = None,
+) -> T:
+    """Run one command; if it has no working credential, collect an approval
+    that is waiting and run it once more."""
+
+    try:
+        return operation()
+    except (AuthenticationRequired, CredentialsMissing) as exc:
+        outcome, link = _connect_waiting_approval(state_dir, collect)
+        if outcome == "collected":
+            return operation()
+        if outcome == "pending" and link:
+            raise AuthenticationRequired(
+                f"{AUTH_REQUIRED_CODE}: Beatra is waiting for the user to select Allow on "
+                f"the approval page: {link}\nShow this link to the user if you have not "
+                "already, then run `python3 scripts/authorize.py`: it continues this same "
+                "approval and waits for Allow."
+            ) from exc
+        raise
 
 
 def main() -> int:
@@ -1578,13 +1655,22 @@ def main() -> int:
                     print(f"Beatra package is current at {checked['current_version']}.")
         else:
             maybe_auto_update()
+        state_dir = Path.home() / ".beatra"
         if args.command == "verify":
-            verify()
+            _with_waiting_approval(verify, state_dir=state_dir)
         elif args.command == "upload":
-            result = upload(args.path, mime_type=args.mime_type)
+            result = _with_waiting_approval(
+                lambda: upload(args.path, mime_type=args.mime_type),
+                state_dir=state_dir,
+            )
             print(json.dumps(result, ensure_ascii=False, separators=(",", ":")))
         elif args.command in {"tools", "call"}:
-            result = _run_command(args.command, getattr(args, "tool_name", None))
+            # Read once: a call retried after collecting an approval reuses them.
+            arguments = _read_tool_arguments() if args.command == "call" else None
+            result = _with_waiting_approval(
+                lambda: _run_command(args.command, getattr(args, "tool_name", None), arguments),
+                state_dir=state_dir,
+            )
             print(json.dumps(result, ensure_ascii=False, separators=(",", ":")))
             if failure := _tool_failure_message(result):
                 print(failure, file=os.sys.stderr)

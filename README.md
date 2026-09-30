@@ -20,7 +20,7 @@ Turn a brand name, industry, or reference image into logo concepts and a scalabl
 
 | Skill | Entry point | Version |
 | --- | --- | --- |
-| [`ai-logo-maker`](skills/ai-logo-maker) | [SKILL.md](skills/ai-logo-maker/SKILL.md) | 0.1.7 |
+| [`ai-logo-maker`](skills/ai-logo-maker) | [SKILL.md](skills/ai-logo-maker/SKILL.md) | 0.2.0 |
 
 This repository is published automatically from [beatra-ai/beatra-skills](https://github.com/beatra-ai/beatra-skills/tree/main/skills/ai-logo-maker). Report issues there.
 

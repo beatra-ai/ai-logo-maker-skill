@@ -30,7 +30,7 @@ AUTHORIZATION_ORIGIN = "https://api.beatra.ai"
 REVOKE_URL = f"{AUTHORIZATION_ORIGIN}/oauth/device/revoke"
 PACKAGE_SLUG = "ai-logo-maker"
 PACKAGE_DISPLAY_NAME = "AI Logo Maker"
-PACKAGE_VERSION = "0.1.7"
+PACKAGE_VERSION = "0.2.0"
 HTTP_USER_AGENT = f"Beatra-Skill/{PACKAGE_SLUG}/{PACKAGE_VERSION}"
 
 #: Everything the connection owns inside ~/.beatra. Removal unlinks exactly
@@ -42,6 +42,8 @@ _STATE_FILES = (
     "host.json",
     "skills.json",
     "registrations.json",
+    "pending_authorization.json",
+    ".authorize.lock",
 )
 
 PostRevoke = Callable[[str], int]

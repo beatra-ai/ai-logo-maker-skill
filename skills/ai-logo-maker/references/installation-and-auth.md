@@ -39,16 +39,59 @@ When no valid credential exists, or the live MCP endpoint definitively returns
 HTTP 401, the helper:
 
 1. reuses or creates `~/.beatra/installation.json`;
-2. requests a Device Authorization from Beatra;
-3. opens the returned HTTPS approval page in the user's browser and also shows
-   its URL. The URL fragment carries the approval code, so the page verifies
-   the code by itself;
-4. polls every 5 seconds for up to 15 minutes while the user signs in (or
-   creates their account) and selects Allow;
+2. continues an approval that is already open on this computer, or requests a
+   new Device Authorization from Beatra. When the user already selected Allow
+   on this computer and nothing collected it, Beatra connects at once — no
+   second approval;
+3. prints the HTTPS approval link at once and opens it in the user's browser
+   (only once for each approval). The URL fragment carries the approval code,
+   so the page verifies the code by itself;
+4. waits while it checks every few seconds whether the user selected Allow,
+   and keeps checking through brief network failures. One run waits up to
+   about 15 minutes; an approval page stays open for up to an hour;
 5. atomically saves the returned Device Token to
    `~/.beatra/credentials.json` without printing an HTTP response body;
 6. validates the new credential with the same non-billable MCP request and
-   prints Ready only after it succeeds.
+   prints `Beatra is ready` only after it succeeds.
+
+### Wait for Allow
+
+The user usually needs a minute or more to sign in or create an account before
+selecting Allow. The helper waits for it: leave it running. If your host moves
+the command to the background, let it keep running and do not start a second
+one.
+
+Act on how each run ends:
+
+- `Beatra is ready` — the connection works; continue with the user's request.
+- `BEATRA_AUTH_PENDING` (exit status 3) — the run ended before the user selected
+  Allow: the approval page had not been opened yet, the run's wait ran out, or
+  the run was stopped. Show the approval link to the user as described below if
+  you have not already, and again if the link is different. Then run the same
+  command again: it continues the same approval, so the user approves only
+  once. When the message says Beatra could not be reached, tell the user the
+  connection is being retried instead of asking them to approve again.
+- `BEATRA_AUTH_IN_PROGRESS` (exit status 3) — another run on this computer is
+  starting an approval right now. Run the same command again in a moment; it
+  continues that approval.
+- `Beatra authorization stopped (access_denied)` — the user declined on the
+  approval page. A decline is often a mis-click: if the user still wants to
+  connect, run the same command again and it opens a new approval page.
+- `Beatra authorization stopped (expired_token)` — the approval page expired
+  before the user selected Allow. Tell the user; if they still want to
+  connect, run the same command again and share the new approval link.
+
+If a run was stopped anyway, for example by a timeout or an interrupted tool
+call, run the same command again: it continues the approval that is already
+open.
+
+An approval does not depend on a run being active when the user selects Allow.
+Beatra keeps it, and every Beatra command collects it first: when the user
+writes again after approving, run the helper once (or go on with their
+request) and the connection completes without a second approval. So if the
+user interrupts to ask something else, stop the helper and answer them; and if
+they do not want to connect now, stop waiting — the link stays valid for a
+while.
 
 When telling the user what to do:
 
@@ -60,24 +103,17 @@ When telling the user what to do:
 - say prominently that a signed-out browser lands on Beatra sign-in first:
   the user signs in or creates their account there, and the approval page
   continues automatically after sign-in;
-- say once that the connection continues automatically after Allow, then
-  detect completion yourself — never ask the user to confirm in chat that
-  they approved.
-
-Approval legitimately takes minutes when sign-in or account creation is
-involved, so run the helper in the background when the command runner enforces
-a shorter timeout. Completion is observable without the user's help: the
-helper exits by itself after printing Ready, and a non-billable
-`python3 scripts/mcp_client.py verify` succeeds once the credential lands.
+- say once that the connection continues automatically after Allow — never
+  ask the user to confirm in chat that they approved.
 
 The helper opens no local listener and requires no inbound connection. One
 approval covers image, video, music, speech, upload, model, and task tools.
 
 HTTP 403 or insufficient scope does not prove the credential is invalid. Keep
-the credential and run `python3 scripts/authorize.py --force` only when the user
-explicitly wants to reconnect or switch accounts. A timeout, DNS/TLS failure,
-HTTP 429, or HTTP 5xx is transient: keep the credential, do not start Device
-Authorization, and retry after connectivity recovers.
+the credential and run `python3 scripts/authorize.py --force`
+only when the user explicitly wants to reconnect or switch accounts. A timeout,
+DNS/TLS failure, HTTP 429, or HTTP 5xx is transient: keep the credential, do
+not start Device Authorization, and retry after connectivity recovers.
 
 ## Use the bundled MCP client
 
@@ -110,8 +146,9 @@ The direct client follows the Streamable HTTP sequence:
 
 The single Device Token has a sliding 15-day idle lifetime. Every accepted MCP
 use extends that idle deadline without user action. If Beatra returns HTTP 401
-after the token was idle too long or was revoked, rerun `scripts/authorize.py`;
-the helper replaces and validates the credential. Do not start another
+after the token was idle too long or was revoked, run
+`python3 scripts/authorize.py` and act on its output as
+described above; the helper replaces and validates the credential. Do not start another
 authorization for a media-type change and do not delete a credential because of
 a transient connection failure.
 

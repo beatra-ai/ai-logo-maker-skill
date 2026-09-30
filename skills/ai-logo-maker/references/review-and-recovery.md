@@ -25,8 +25,9 @@ minutes and report the task ID and status.
   timing. If the match is ambiguous, do not submit a replacement.
 - **Slow task:** a queued or running task never authorizes a replacement. Keep
   polling or report the task ID for later resumption.
-- **Authorization failure:** do not auto-retry. Preserve the credential and
-  direct the user to rerun `scripts/authorize.py`. The original
+- **Authorization failure:** do not auto-retry. Preserve the credential, run
+  `python3 scripts/authorize.py`, and follow its output until
+  it prints `Beatra is ready`. The original
   `client_request_id` remains valid for idempotent recovery once authorization
   is restored.
 - **Connection failure:** preserve the credential and the original
