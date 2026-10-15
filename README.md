@@ -20,7 +20,7 @@ Turn a brand name, industry, or reference image into logo concepts and a scalabl
 
 | Skill | Entry point | Version |
 | --- | --- | --- |
-| [`ai-logo-maker`](skills/ai-logo-maker) | [SKILL.md](skills/ai-logo-maker/SKILL.md) | 0.2.0 |
+| [`ai-logo-maker`](skills/ai-logo-maker) | [SKILL.md](skills/ai-logo-maker/SKILL.md) | 0.2.4 |
 
 This repository is published automatically from [beatra-ai/beatra-skills](https://github.com/beatra-ai/beatra-skills/tree/main/skills/ai-logo-maker). Report issues there.
 
@@ -90,12 +90,12 @@ Yes. Provide hex color values and the logo generation uses them as the palette f
 
 Yes. Upload the existing logo or sketch, describe what to change, and the refinement preserves the overall direction while adjusting specific elements.
 
-## Updates
+## Updates and security
 
-Each installed skill checks for a new version at most once a day, verifies the
-official archive before replacing itself, and leaves your installation untouched
-if anything fails. Turn it off at any time — see
-`references/automatic-updates-and-safety.md` inside the skill.
+Since the 2026-10 release, this skill contains no self-updater: it runs only the
+files you installed and never replaces them on its own. Update it with the tool
+you installed it with — `npx skills update ai-logo-maker` or `gh skill update ai-logo-maker`.
+Details: `references/updates-and-security.md` inside the skill.
 
 ## License
 

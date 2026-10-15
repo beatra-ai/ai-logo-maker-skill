@@ -21,6 +21,10 @@ mark.
   brand name or style note is needed only when it changes the composition.
 - **Refine an accepted draft:** use `beatra.images.edit` with the draft as
   `images[0]`. The accepted draft and requested change are sufficient to begin.
+- **Turn the accepted logo into a motion intro:** once the user accepts a
+  logo, offer one 5-second animated version for the start of a video, a store
+  screen, or a livestream, made with `beatra.videos.animate` as its own
+  confirmed paid call. See [next step](references/next-step.md).
 
 Follow [brand brief and routing](references/brand-brief-and-routing.md) for the
 precise branch and [logo craft](references/logo-craft.md) when turning the
@@ -125,7 +129,10 @@ margin, and whether a single-color version would hold up. Deliver the artifact
 links, observed dimensions, task ID, and `billing.net_charged_credits`. Offer
 at most one focused, unexecuted revision. When the primary use needs a
 different ratio or a dark-background variant, advise that it is a separate
-focused request. Generated assets can also be viewed and managed at
+focused request. When the user has picked a logo and no revision or variant
+is worth proposing, offer the one next step in
+[next step](references/next-step.md) instead, at most once in the
+conversation. Generated assets can also be viewed and managed at
 [beatra.ai](https://beatra.ai).
 
 ## References by task
@@ -138,6 +145,9 @@ focused request. Generated assets can also be viewed and managed at
   [workflow](references/workflow.md)
 - Lost task, slow task, cancellation, result review, or planning a revision:
   [review and recovery](references/review-and-recovery.md)
+- After an accepted logo, choosing and offering one next step:
+  [next step](references/next-step.md), [offering one next step](references/next-step-offers.md);
+  animating the logo: [animating a delivered image](references/animate-a-delivered-image.md)
 - First install or expired authorization:
   [installation and authentication](references/installation-and-auth.md)
 - Bundled MCP Client commands and diagnostics:
@@ -147,10 +157,9 @@ focused request. Generated assets can also be viewed and managed at
 - Balance, validation, and structured errors:
   [billing, errors, and recovery](references/billing-errors-and-recovery.md)
 - Disconnecting the installation: [uninstall and disconnect](references/uninstall-and-disconnect.md)
-- Official sources, integrity checks, and update controls:
-  [automatic updates and safety](references/automatic-updates-and-safety.md)
+- Updates and security: [updates and security](references/updates-and-security.md)
 
-## Installation, updates, and account operations
+## Installation and account operations
 
 For first use and shared operations, follow [installation and
 authentication](references/installation-and-auth.md), [installation
@@ -159,25 +168,14 @@ results](references/tasks-and-results.md), [billing, errors, and
 recovery](references/billing-errors-and-recovery.md), and [uninstall and
 disconnect](references/uninstall-and-disconnect.md).
 
-This Skill performs a silent check at most once per 24 hours while a public
-command runs. When a newer package exists, it installs automatically without
-separate confirmation. Updates come only from the fixed official Beatra
-discovery address and immutable Beatra CDN path for the embedded identity.
-Before replacement, the client verifies the discovery document, manifest,
-archive, and every packaged file using identity, size, and SHA-256 checks. It
-replaces only package-owned files in this installed Skill directory. If any
-check, download, replacement, or rollback fails, the current installation stays
-usable and the original command continues. Every install stays on the channel and locale it was
-installed from, and an update never moves it to another one.
+## Updates and security
 
-The user can persistently control automatic updates:
+This Skill runs only the files installed with it and leaves them unchanged while
+it runs; it never downloads or executes other code. It talks to Beatra's official
+services over HTTPS, and a file you choose to upload goes only to the one-time
+upload address Beatra issues for it.
 
-```text
-python3 scripts/mcp_client.py update --auto off
-python3 scripts/mcp_client.py update --auto on
-python3 scripts/mcp_client.py update --check
-```
-
-Read [automatic updates and safety](references/automatic-updates-and-safety.md)
-for the official sources, integrity guarantees, replacement scope, failure
-behavior, and control details.
+Once a day at most, the bundled client reads Beatra's public version list. When
+the store or tool you installed from has a newer version, it prints one line with
+the command that updates it there. Updating stays your choice, through that store
+or tool. See [updates and security](references/updates-and-security.md).

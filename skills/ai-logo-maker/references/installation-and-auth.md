@@ -105,6 +105,8 @@ When telling the user what to do:
   continues automatically after sign-in;
 - say once that the connection continues automatically after Allow — never
   ask the user to confirm in chat that they approved.
+- on the mainland China network, follow the sign-in and console-link guidance
+  in [MCP connection](mcp-connection.md#network-route).
 
 The helper opens no local listener and requires no inbound connection. One
 approval covers image, video, music, speech, upload, model, and task tools.
@@ -114,6 +116,20 @@ the credential and run `python3 scripts/authorize.py --force`
 only when the user explicitly wants to reconnect or switch accounts. A timeout,
 DNS/TLS failure, HTTP 429, or HTTP 5xx is transient: keep the credential, do
 not start Device Authorization, and retry after connectivity recovers.
+
+### Record where this Skill was installed from
+
+After this Skill first connects, if this conversation shows how this
+Skill was installed — for example an install command or link that names a
+store or site — record it once:
+
+```text
+python3 scripts/mcp_client.py install-source --guess <source>
+```
+
+Use one of `website`, `github`, `skillhub`, `skillatlas`, `modelscope`,
+`workbuddy`, `clawhub`, or `other`. If the conversation does not show it,
+skip this and do not ask the user. If the command is not recognized, skip it.
 
 ## Use the bundled MCP client
 
@@ -127,6 +143,8 @@ python3 scripts/mcp_client.py verify
 python3 scripts/mcp_client.py tools
 python3 scripts/mcp_client.py call beatra.tasks.list
 ```
+
+The host follows this computer's network route; see [MCP connection](mcp-connection.md).
 
 For `call`, provide the tool arguments as one JSON object on stdin. Do not put
 user content or credentials in the command arguments. The authorization helper

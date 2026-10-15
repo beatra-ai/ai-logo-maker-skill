@@ -26,13 +26,20 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+sys.dont_write_bytecode = True  # never leave __pycache__ inside the installed Skill
+
+#: The two forms of an approval link. A code is looked up by its hash on either
+#: host, so every helper accepts both and never rewrites a link another helper
+#: saved. Requests themselves go to the host of this computer's network route,
+#: which the bundled mcp_client owns.
 AUTHORIZATION_ORIGIN = "https://api.beatra.ai"
+CN_AUTHORIZATION_ORIGIN = "https://api.beatra.cn"
 MCP_URL = "https://mcp.beatra.ai/mcp"
-DEVICE_AUTHORIZATION_URL = f"{AUTHORIZATION_ORIGIN}/oauth/device_authorization"
-TOKEN_URL = f"{AUTHORIZATION_ORIGIN}/oauth/token"
+DEVICE_AUTHORIZATION_PATH = "/oauth/device_authorization"
+TOKEN_PATH = "/oauth/token"
 PACKAGE_SLUG = "ai-logo-maker"
 PACKAGE_DISPLAY_NAME = "AI Logo Maker"
-PACKAGE_VERSION = "0.2.0"
+PACKAGE_VERSION = "0.2.4"
 CLIENT_ID = f"beatra-skill-{PACKAGE_SLUG}"
 GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code"
 SCOPE = (
@@ -248,6 +255,52 @@ class _RejectRedirectHandler(urllib.request.HTTPRedirectHandler):
         raise RuntimeError(f"Beatra authorization refused HTTP redirect ({code})")
 
 
+def _runtime() -> Any:
+    """The bundled mcp_client beside this file: it owns the network route."""
+
+    try:
+        import mcp_client
+    except ImportError as exc:
+        raise RuntimeError("Beatra's bundled scripts/mcp_client.py is missing; reinstall this Skill") from exc
+    return mcp_client
+
+
+def _resolve_route(state_dir: Path) -> None:
+    """Decide this computer's network once, before anything is sent. A failure
+    leaves the recorded route (or ai) in place."""
+
+    with suppress(Exception):
+        _runtime().resolve_route(state_dir)
+
+
+def _shown_link(link: str, state_dir: Path) -> str:
+    """The approval link in the form this computer chose to open
+    (`--approval-link`, spec §5.7). A code is looked up by its hash on either
+    host, so the international form opens the same approval. The saved pending
+    file keeps the link Beatra returned, untouched, for every other helper."""
+
+    prefix = f"{CN_AUTHORIZATION_ORIGIN}/device#code="
+    if not link.startswith(prefix):
+        return link
+    try:
+        preference = _runtime().approval_link_preference(state_dir)
+    except Exception:
+        return link
+    if preference != "ai":
+        return link
+    return AUTHORIZATION_ORIGIN + link[len(CN_AUTHORIZATION_ORIGIN) :]
+
+
+def _note_route_failure() -> None:
+    with suppress(Exception):
+        _runtime().note_route_failure()
+
+
+def _authorization_url(state_dir: Path, path: str) -> str:
+    runtime = _runtime()
+    return f"{runtime.route_api_origin(runtime.current_route(state_dir))}{path}"
+
+
 def _default_post_form(url: str, fields: dict[str, str], *, timeout: float | None = None) -> tuple[int, dict[str, Any]]:
     request = urllib.request.Request(
         url,
@@ -262,12 +315,14 @@ def _default_post_form(url: str, fields: dict[str, str], *, timeout: float | Non
     opener = urllib.request.build_opener(_RejectRedirectHandler())
     try:
         if timeout is None:
-            timeout = POLL_TIMEOUT_SECONDS if url == TOKEN_URL else 30
+            timeout = POLL_TIMEOUT_SECONDS if url.endswith(TOKEN_PATH) else 30
         with opener.open(request, timeout=timeout) as response:
             status = int(response.status)
             raw = response.read()
     except urllib.error.HTTPError as exc:
         status = int(exc.code)
+        if status in (502, 503, 504):
+            _note_route_failure()
         try:
             raw = exc.read()
         except (OSError, http.client.HTTPException) as read_error:
@@ -275,6 +330,7 @@ def _default_post_form(url: str, fields: dict[str, str], *, timeout: float | Non
     except (OSError, http.client.HTTPException) as exc:
         # URLError covers DNS, refused connections and TLS handshakes; a
         # timeout or reset while waiting for the response surfaces unwrapped.
+        _note_route_failure()
         raise _TransientAuthorizationError(UNREACHABLE_MESSAGE) from exc
     try:
         payload = json.loads(raw.decode("utf-8"))
@@ -366,8 +422,8 @@ def _positive_int(payload: dict[str, Any], name: str, default: int) -> int:
 
 
 def _validate_verification_url(value: str, *, user_code: str) -> str:
-    expected = f"{AUTHORIZATION_ORIGIN}/device#code={urllib.parse.quote(user_code, safe='-')}"
-    if value != expected:
+    fragment = f"/device#code={urllib.parse.quote(user_code, safe='-')}"
+    if value not in (f"{AUTHORIZATION_ORIGIN}{fragment}", f"{CN_AUTHORIZATION_ORIGIN}{fragment}"):
         raise RuntimeError("Beatra authorization verification URL is invalid")
     return value
 
@@ -402,11 +458,11 @@ def _existing_credential(state_dir: Path) -> Path | None:
 
 
 def _default_probe_credential(credential_path: Path) -> bool:
-    import mcp_client
+    runtime = _runtime()
 
     try:
-        mcp_client.verify(state_dir=credential_path.parent)
-    except mcp_client.AuthenticationRequired:
+        runtime.verify(state_dir=credential_path.parent)
+    except runtime.AuthenticationRequired:
         return False
     return True
 
@@ -808,7 +864,7 @@ def _start_authorization(
     }
     if device_name:
         form["device_name"] = device_name
-    status, created = post_form(DEVICE_AUTHORIZATION_URL, form)
+    status, created = post_form(_authorization_url(state_dir, DEVICE_AUTHORIZATION_PATH), form)
     if status != 200:
         code = _safe_protocol_error(created.get("error"), _START_ERRORS)
         raise RuntimeError(f"Beatra authorization could not start ({code})")
@@ -1086,6 +1142,7 @@ def _wait_for_credential(
     wait_seconds: float | None,
 ) -> Path:
     global _CURRENT_LINK
+    token_url = _authorization_url(state_dir, TOKEN_PATH)
     legacy = wait_seconds is not None
     started_mono = monotonic()
     started_wall = wall_time()
@@ -1120,7 +1177,7 @@ def _wait_for_credential(
         False when no page could open, so the agent must show the link now."""
 
         global _CURRENT_LINK
-        _CURRENT_LINK = str(current["verification_uri_complete"])
+        _CURRENT_LINK = _shown_link(str(current["verification_uri_complete"]), state_dir)
         if current.get("approved_on_create"):
             _say("This computer's earlier approval carries over; connecting now.")
             return True
@@ -1133,7 +1190,7 @@ def _wait_for_credential(
         if no run managed to open it yet."""
 
         global _CURRENT_LINK
-        _CURRENT_LINK = str(current["verification_uri_complete"])
+        _CURRENT_LINK = _shown_link(str(current["verification_uri_complete"]), state_dir)
         _say("Continuing the Beatra approval that is already open.")
         open_page = not current.get("opened")
         _announce(_CURRENT_LINK, open_browser, open_page=open_page)
@@ -1143,7 +1200,7 @@ def _wait_for_credential(
     if resumed:
         # Checked before anything is shown: it may already be approved (then
         # no page is needed at all) or over.
-        _CURRENT_LINK = str(pending["verification_uri_complete"])
+        _CURRENT_LINK = _shown_link(str(pending["verification_uri_complete"]), state_dir)
         browser_ok = True
         early_after: float | None = None
         wait_first = False
@@ -1164,7 +1221,7 @@ def _wait_for_credential(
 
     def pending_error(current: dict[str, Any]) -> _ApprovalPending:
         return _ApprovalPending(
-            str(current["verification_uri_complete"]),
+            _shown_link(str(current["verification_uri_complete"]), state_dir),
             answered=answered,
             minutes_left=_minutes_left(current, wall_time),
             # Short runs (the 09-23 shape, or Beatra's fallback switch) need the
@@ -1193,7 +1250,7 @@ def _wait_for_credential(
                     return collected
                 rejected_credential_at = written_at
         try:
-            status, polled = post_form(TOKEN_URL, _poll_fields(pending))
+            status, polled = post_form(token_url, _poll_fields(pending))
             unreachable = False
         except _TransientAuthorizationError:
             # The poll may have reached the server and its answer been lost;
@@ -1278,7 +1335,7 @@ def _wait_for_credential(
             _say(
                 "Still waiting for Allow on the approval page "
                 f"(about {_minutes_left(pending, wall_time)} more minutes): "
-                f"{pending['verification_uri_complete']}"
+                f"{_shown_link(str(pending['verification_uri_complete']), state_dir)}"
             )
         if wall_time() >= float(pending["expires_at"]) + REDEEM_GRACE_SECONDS and outcome in {"pending", "slow_down"}:
             _discard_pending(state_dir, device_code=str(pending["device_code"]))
@@ -1308,9 +1365,10 @@ def collect_saved_approval(
     pending, _ = _load_pending(state_dir, wall_time=wall_time)
     if pending is None:
         return "none", None
-    link = str(pending["verification_uri_complete"])
+    link = _shown_link(str(pending["verification_uri_complete"]), state_dir)
+    token_url = _authorization_url(state_dir, TOKEN_PATH)
     try:
-        status, polled = (post_form or _collect_post_form)(TOKEN_URL, _poll_fields(pending))
+        status, polled = (post_form or _collect_post_form)(token_url, _poll_fields(pending))
     except _TransientAuthorizationError:
         return "unreachable", link
     outcome = _classify_poll(status, polled, False)
@@ -1417,6 +1475,15 @@ def main() -> int:
             "again continues the same approval."
         ),
     )
+    parser.add_argument(
+        "--approval-link",
+        choices=("ai", "auto"),
+        default=None,
+        help=(
+            "Show approval links on Beatra's international site (ai), for sign-in "
+            "methods such as Google, or follow this computer's network again (auto)."
+        ),
+    )
     args = parser.parse_args()
     if args.wait_seconds is not None and not WAIT_SECONDS_MIN <= args.wait_seconds <= WAIT_SECONDS_MAX:
         parser.error(f"--wait-seconds must be between {WAIT_SECONDS_MIN} and {WAIT_SECONDS_MAX}")
@@ -1426,6 +1493,15 @@ def main() -> int:
         sys.stdout.reconfigure(line_buffering=True)
     _install_signal_handlers()
     try:
+        # Inside the try: a stop during the route check is reported like any
+        # other stop before an approval page was ready.
+        state_dir = Path.home() / ".beatra"
+        _resolve_route(state_dir)
+        if args.approval_link is not None:
+            try:
+                _runtime().set_approval_link_preference(state_dir, args.approval_link)
+            except OSError as exc:
+                raise RuntimeError(f"Could not save the approval-link choice: {exc}") from exc
         authorize(platform=args.platform, force=args.force, wait_seconds=args.wait_seconds)
         code = 0
     except _ApprovalPending as pending:

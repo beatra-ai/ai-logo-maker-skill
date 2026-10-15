@@ -19,6 +19,19 @@ task is settled against authoritative measured usage. Read the terminal
 `billing.net_charged_credits`. Do not promise that the initial estimate
 is the final charge.
 
+## Run a batch
+
+When one request becomes many paid calls (a list of items, a loop, or a
+script):
+
+1. Before the first paid call, price the whole batch from the live prices
+   (`beatra.models.list`, or `beatra.social.tools.get` for social data) and
+   tell the user the estimated total.
+2. Let the first `insufficient_balance` stop the whole batch. Do not go on to
+   the next item; report which items finished and which did not.
+3. Resume only the unfinished items, and only after the user says they have
+   topped up. A refused item keeps its `client_request_id` and arguments.
+
 ## Recover an uncertain response
 
 - If no response arrived, make an identical retry with the same
@@ -47,10 +60,17 @@ is the final charge.
   message to the user — it already carries the facts that matter: nothing was
   charged, the top-up link, credits take effect immediately, and the same
   request can be retried as-is. Translate into the user's language but keep
-  the URL exactly as returned. Do not retry until the user says they have
-  topped up. A successful task can also leave a negative balance when actual
-  measured usage exceeded the estimate; the output remains valid, but new
-  billable work must wait for a top-up.
+  the URL exactly as returned. Stop all remaining paid work, including the
+  rest of a batch, and do not retry until the user says they have topped up.
+  A successful task can also leave a negative balance when actual measured
+  usage exceeded the estimate; the output remains valid, but new billable
+  work must wait for a top-up.
+- After that refusal, `scripts/mcp_client.py` holds further calls to the same
+  tool on this computer: it answers them with the same message and sends
+  nothing (`details.local_hold`). Its `details.agent_note` names the balance
+  check that lifts the hold once the user says they have topped up. If the user
+  chose a cheaper request instead, run that cheaper call once with
+  `--recheck-balance`. Never put `--recheck-balance` in a loop or script.
 - Idempotency conflict: the request identity was reused with different
   arguments. Do not retry it. Keep the original task if it exists, or use a new
   `client_request_id` only for user-approved changed work.
