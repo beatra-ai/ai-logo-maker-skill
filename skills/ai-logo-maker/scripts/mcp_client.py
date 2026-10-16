@@ -28,10 +28,15 @@ from typing import Any, TypeVar
 
 sys.dont_write_bytecode = True  # never leave __pycache__ inside the installed Skill
 
+try:
+    import auto_update  # present only in the domestic storefront channels
+except Exception:  # a missing or broken updater must never stop the client
+    auto_update = None
+
 PROTOCOL_VERSION = "2025-11-25"
 PACKAGE_SLUG = "ai-logo-maker"
 PACKAGE_DISPLAY_NAME = "AI Logo Maker"
-PACKAGE_VERSION = "0.2.4"
+PACKAGE_VERSION = "0.2.5"
 PACKAGE_CHANNEL = "canonical"
 PACKAGE_LOCALE = "en"
 PACKAGE_DISCOVERY_URL = "https://beatra.ai/skills/ai-logo-maker/install.json"
@@ -2218,13 +2223,27 @@ def main() -> int:
     )
     update = subparsers.add_parser(
         "update",
-        help="Show whether the store or tool you installed from has a newer version",
+        help=(
+            "Check, install, or configure Beatra package self-updates"
+            if auto_update is not None
+            else "Show whether the store or tool you installed from has a newer version"
+        ),
     )
     update.add_argument(
         "--check",
         action="store_true",
-        help="Same as update: report only; this client never changes its own files",
+        help=(
+            "Check the official discovery document without changing files"
+            if auto_update is not None
+            else "Same as update: report only; this client never changes its own files"
+        ),
     )
+    if auto_update is not None:
+        update.add_argument(
+            "--auto",
+            choices=("on", "off"),
+            help="Enable or disable automatic silent updates for this installation",
+        )
     network = subparsers.add_parser("network", help="Show or choose the Beatra network this computer uses")
     network.add_argument(
         "--use",
@@ -2243,7 +2262,37 @@ def main() -> int:
         # request (spec §5.2).
         resolve_route(state_dir)
         if args.command == "update":
-            print(update_status(state_dir=state_dir))
+            if auto_update is None:
+                print(update_status(state_dir=state_dir))
+            else:
+                auto_choice = getattr(args, "auto", None)
+                if args.check and auto_choice is not None:
+                    raise RuntimeError("Use either --check or --auto, not both")
+                if auto_choice is not None:
+                    enabled = auto_choice == "on"
+                    auto_update.set_auto_update(enabled)
+                    print(
+                        "Automatic Beatra package updates are "
+                        f"{'enabled' if enabled else 'disabled'}."
+                    )
+                elif args.check:
+                    checked = auto_update.check_update()
+                    if checked["update_available"]:
+                        print(
+                            "Beatra package update available: "
+                            f"{checked['current_version']} -> {checked['available_version']}."
+                        )
+                    else:
+                        print(f"Beatra package is current at {checked['current_version']}.")
+                else:
+                    checked = auto_update.update_package()
+                    if checked["update_available"]:
+                        print(
+                            "Beatra package updated to "
+                            f"{checked['available_version']}; the next process will use it."
+                        )
+                    else:
+                        print(f"Beatra package is current at {checked['current_version']}.")
         elif args.command == "network":
             _network_command(args.use, state_dir)
         elif args.command == "install-source":
@@ -2256,7 +2305,10 @@ def main() -> int:
             else:
                 print(f"Kept the recorded install source: {recorded['value']} ({recorded['basis']}).")
         else:
-            maybe_notify_update(state_dir=state_dir)
+            if auto_update is not None and auto_update.auto_update_enabled(state_dir=state_dir):
+                auto_update.maybe_auto_update(state_dir=state_dir)
+            else:
+                maybe_notify_update(state_dir=state_dir)
         if args.command == "verify":
             _with_waiting_approval(verify, state_dir=state_dir)
         elif args.command == "upload":
