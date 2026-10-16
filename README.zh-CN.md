@@ -67,6 +67,15 @@ Refine this accepted Brightmoss logo into a two-part brand presentation on one f
 - **图片编辑** — 6 个模型（Qwen Image 2.0 Fast、Qwen Image 3.0、Qwen Image 3.0 Pro、Wan Image 2.7 Fast、Qwen Image 2.0 Pro、Wan Image 2.7 Pro）；单次最多 4 张；画布最多 4194304 像素
 - **图生视频** — 9 个模型（wan2.7-i2v、wan3.0-video、minimax-h3、seedance-2-mini、happyhorse-1.1-i2v、seedance-2-fast、seedance-2、wan3.0-video-prime、seedance-2.5）；480p 至 4K；2–30 秒；画幅 16:9、1:1、21:9、3:4、4:3、9:16；MOV、MP4；2 个带原生音频
 
+## 为什么用 Beatra，而不是直接调用模型 API
+
+- **一个账号用到本 skill 的全部模型** — 文生图 10；图生图 10；图片编辑 6；图生视频 9（截至 2026-10-16），一次 Beatra 登录即可使用，不必分别管理各家模型的 key。
+- **花不花钱由你决定** — 只有你明确要求这次生成，或批准显示实时积分估算的确认卡后才会付费。
+- **先策划，再生成** — skill 先帮你规划、指导和检查，再在 Beatra 上生成。
+- **文件可以核验** — `skills/` 下的每个文件都与 cdn.beatra.ai 上的发布归档逐字节一致，每次推送前用 SHA-256 校验。
+- **更新由你掌控** — 不含自更新程序；用安装时的工具更新。
+- **在你的 Agent 里运行** — Claude Code、Codex、OpenClaw。
+
 ## 你能得到什么
 
 - **先探索再决定** — 从一个品牌简报生成多个 logo 概念,并排比较不同方向,然后精修最强的那个。专业 logo 设计从选项开始。
@@ -113,6 +122,7 @@ Refine this accepted Brightmoss logo into a two-part brand presentation on one f
 - 官网 — https://www.beatra.cn
 - 文档 — https://docs.beatra.cn
 - 控制台 — https://console.beatra.cn
+- 给 AI Agent 读的说明 — https://www.beatra.cn/llms.txt（索引）· https://www.beatra.cn/llms-full.txt（全部 skill 合成一个文件）
 
 - 微信小程序 — 国内用户微信扫码使用
 

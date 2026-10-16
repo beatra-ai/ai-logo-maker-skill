@@ -68,6 +68,15 @@ As of 2026-10-16. Live list: https://docs.beatra.ai/en/docs/models
 - **Image editing** — 6 models (Qwen Image 2.0 Fast, Qwen Image 3.0, Qwen Image 3.0 Pro, Wan Image 2.7 Fast, Qwen Image 2.0 Pro, Wan Image 2.7 Pro); up to 4 images per request; canvas up to 4194304 pixels
 - **Image to video** — 9 models (wan2.7-i2v, wan3.0-video, minimax-h3, seedance-2-mini, happyhorse-1.1-i2v, seedance-2-fast, seedance-2, wan3.0-video-prime, seedance-2.5); 480p to 4K; 2–30 s; aspect ratios 16:9, 1:1, 21:9, 3:4, 4:3, 9:16; MOV, MP4; 2 with native audio
 
+## Why use Beatra instead of calling model APIs directly
+
+- **One account for every model this skill uses** — Text to image 10; Image to image 10; Image editing 6; Image to video 9 (as of 2026-10-16), behind one Beatra sign-in; no keys from individual model providers to manage.
+- **You decide what gets paid for** — Paid renders run only when you ask for that exact render or approve its card, which shows the live credit estimate.
+- **Direction before rendering** — the skill plans, directs, and reviews the work, then renders it on Beatra.
+- **Files you can verify** — every file under `skills/` matches the release archive on cdn.beatra.ai byte for byte, checked by SHA-256 before each push.
+- **Updates you control** — no self-updater; update with the tool you installed it with.
+- **Runs in your agent** — Claude Code, Codex, OpenClaw.
+
 ## What you get
 
 - **Explore before you commit** — Generate multiple logo concepts from one brand brief, compare directions side by side, then refine the strongest. Professional logo design starts with options.
@@ -117,3 +126,4 @@ ClawHub.
 - Website — https://beatra.ai
 - Docs — https://docs.beatra.ai
 - Console — https://console.beatra.ai
+- For AI agents — https://beatra.ai/llms.txt (index) · https://beatra.ai/llms-full.txt (every skill in one file)
