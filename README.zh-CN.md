@@ -2,7 +2,7 @@
 
 [English](./README.md) | 简体中文
 
-输入品牌名、行业或参考图，生成多个 Logo 方向并打磨成可缩放的品牌标识，在 Claude Code、Codex 或 OpenClaw 里直接完成。
+输入品牌名、行业或参考图，生成多个 Logo 方向并打磨成可缩放的品牌标识，在 Claude Code、Cursor、Codex、Windsurf、Cline 或 OpenClaw 里直接完成。
 
 > [!IMPORTANT]
 > 生成需要 [Beatra](https://beatra.ai) 账号并消耗积分，安装本身不收费。
@@ -10,9 +10,10 @@
 | 问题 | 回答 |
 | --- | --- |
 | **能做什么** | 输入品牌名称、行业方向或参考图,生成专业 AI Logo、品牌标识和应用图标,支持多变体探索、精确品牌色和可缩放构图。 |
+| **底层模型** | Qwen Image 2.0 Fast、Qwen Image 3.0、Qwen Image 3.0 Pro、GPT Image 2.5 Flare、GPT Image 2.5 Sunburst、GPT Image 2、Wan Image 2.7 Fast、Qwen Image 2.0 Pro、Wan Image 2.7 Pro、MiniMax Image 01 Live、Wan 2.7、Wan 3.0 Video、MiniMax H3、Seedance 2.0 Mini、HappyHorse 1.1、Seedance 2.0 Fast、Seedance 2.0、Wan 3.0 Video Prime、Seedance 2.5 |
 | **运行要求** | Python 3.10+，以及能加载 `SKILL.md` 的 Agent |
 | **费用** | 安装免费。每次生成消耗 Beatra 账号积分，只有你明确要求这次生成或批准确认卡后才会付费。 |
-| **支持的 Agent** | Claude Code、Codex、OpenClaw |
+| **支持的 Agent** | Claude Code、Cursor、Codex、Windsurf、Cline、OpenClaw |
 
 <p align="center"><img src="assets/hero.webp" width="800" alt="为虚构精品咖啡烘焙品牌 Brightmoss 探索的三个 logo 方向：咖啡豆与嫩叶组合标、带咖啡滴负形的 B 字母标、杯上日出徽章。由 Beatra AI 生成。"></p>
 
@@ -20,7 +21,7 @@
 
 | Skill | Entry point | Version |
 | --- | --- | --- |
-| [`ai-logo-maker`](skills/ai-logo-maker) | [SKILL.md](skills/ai-logo-maker/SKILL.md) | 0.2.5 |
+| [`ai-logo-maker`](skills/ai-logo-maker) | [SKILL.md](skills/ai-logo-maker/SKILL.md) | 0.2.6 |
 
 本仓库由 [beatra-ai/beatra-skills](https://github.com/beatra-ai/beatra-skills/tree/main/skills/ai-logo-maker) 自动发布，问题请到那里反馈。
 
@@ -38,7 +39,7 @@ npx skills add beatra-ai/ai-logo-maker-skill
 gh skill install beatra-ai/ai-logo-maker-skill ai-logo-maker
 ```
 
-也可以克隆本仓库，把 `skills/ai-logo-maker` 复制到 `~/.claude/skills/`（Claude Code）、`~/.agents/skills/`（Codex）或 `~/.openclaw/skills/`（OpenClaw）。
+也可以克隆本仓库，把 `skills/ai-logo-maker` 复制到 `~/.claude/skills/`（Claude Code）、`~/.cursor/skills/`（Cursor）、`~/.agents/skills/`（Codex）、`~/.codeium/windsurf/skills/`（Windsurf）、`~/.cline/skills/`（Cline）或 `~/.openclaw/skills/`（OpenClaw）。
 
 或者把下面这段话发给你的 Agent：
 
@@ -60,7 +61,7 @@ Refine this accepted Brightmoss logo into a two-part brand presentation on one f
 
 ## 技术规格与输出限制
 
-截至 2026-10-16。实时列表：https://docs.beatra.ai/zh/docs/models
+截至 2026-10-18。实时列表：https://docs.beatra.ai/zh/docs/models
 
 - **上传** — 单个文件最大 100 MB；同时适用下方各模型的输入限制
 - **文生图** — 10 个模型（Qwen Image 2.0 Fast、Qwen Image 3.0、Qwen Image 3.0 Pro、GPT Image 2.5 Flare、GPT Image 2.5 Sunburst、GPT Image 2、Wan Image 2.7 Fast、Qwen Image 2.0 Pro、Wan Image 2.7 Pro、MiniMax Image 01 Live）；PNG；单次最多 4 张；画布最大 16.8 MP
@@ -71,19 +72,19 @@ Refine this accepted Brightmoss logo into a two-part brand presentation on one f
 - **图片编辑** — 6 个模型（Qwen Image 2.0 Fast、Qwen Image 3.0、Qwen Image 3.0 Pro、Wan Image 2.7 Fast、Qwen Image 2.0 Pro、Wan Image 2.7 Pro）；PNG；单次最多 4 张；画布最大 4.2 MP
   - 4.2 MP（2K 档）：Qwen Image 2.0 Fast、Qwen Image 3.0、Qwen Image 3.0 Pro、Wan Image 2.7 Fast、Qwen Image 2.0 Pro、Wan Image 2.7 Pro（单次最多 4 张）
   - 输入图片：单次最多 4 张，每张 10–20 MB；BMP、GIF、JPEG、PNG、TIFF、WEBP
-- **图生视频** — 9 个模型（wan2.7-i2v、wan3.0-video、minimax-h3、seedance-2-mini、happyhorse-1.1-i2v、seedance-2-fast、seedance-2、wan3.0-video-prime、seedance-2.5）；480p 至 4K；2–30 秒；画幅 16:9、1:1、21:9、3:4、4:3、9:16；MOV、MP4
-  - 4K：seedance-2，最长 15 秒
-  - 30 秒：wan3.0-video、wan3.0-video-prime、seedance-2.5，最高 1080p
-  - 原生音频：wan2.7-i2v、minimax-h3
+- **图生视频** — 9 个模型（Wan 2.7、Wan 3.0 Video、MiniMax H3、Seedance 2.0 Mini、HappyHorse 1.1、Seedance 2.0 Fast、Seedance 2.0、Wan 3.0 Video Prime、Seedance 2.5）；480p 至 4K；2–30 秒；画幅 16:9、1:1、21:9、3:4、4:3、9:16；MOV、MP4
+  - 4K：Seedance 2.0，最长 15 秒
+  - 30 秒：Wan 3.0 Video、Wan 3.0 Video Prime、Seedance 2.5，最高 1080p
+  - 原生音频：Wan 2.7、MiniMax H3
 
 ## 为什么用 Beatra，而不是直接调用模型 API
 
-- **一个账号用到本 skill 的全部模型** — 文生图 10；图生图 10；图片编辑 6；图生视频 9（截至 2026-10-16），一次 Beatra 登录即可使用，不必分别管理各家模型的 key。
+- **一个账号用到本 skill 的全部模型** — 文生图 10；图生图 10；图片编辑 6；图生视频 9（Qwen Image 2.0 Fast、Qwen Image 3.0、Qwen Image 3.0 Pro、GPT Image 2.5 Flare、GPT Image 2.5 Sunburst、GPT Image 2、Wan Image 2.7 Fast、Qwen Image 2.0 Pro、Wan Image 2.7 Pro、MiniMax Image 01 Live、Wan 2.7、Wan 3.0 Video、MiniMax H3、Seedance 2.0 Mini、HappyHorse 1.1、Seedance 2.0 Fast、Seedance 2.0、Wan 3.0 Video Prime、Seedance 2.5）（截至 2026-10-18），一次 Beatra 登录即可使用，不必分别管理各家模型的 key。
 - **花不花钱由你决定** — 只有你明确要求这次生成，或批准显示实时积分估算的确认卡后才会付费。
 - **先策划，再生成** — skill 先帮你规划、指导和检查，再在 Beatra 上生成。
 - **文件可以核验** — `skills/` 下的每个文件都与 cdn.beatra.ai 上的发布归档逐字节一致，每次推送前用 SHA-256 校验。
 - **更新由你掌控** — 不含自更新程序；用安装时的工具更新。
-- **在你的 Agent 里运行** — Claude Code、Codex、OpenClaw。
+- **在你的 Agent 里运行** — Claude Code、Cursor、Codex、Windsurf、Cline、OpenClaw。
 
 ## 你能得到什么
 

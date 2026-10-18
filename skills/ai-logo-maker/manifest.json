@@ -1,5 +1,5 @@
 {
-  "changelog": "Copies installed from SkillHub, ModelScope, or WorkBuddy update themselves again. Nothing else changes.",
+  "changelog": "Internal cleanup of the bundled client. Nothing you use changes.",
   "display_name": "AI Logo Maker",
   "entry": "SKILL.md",
   "homepage": "https://beatra.ai/skills/ai-logo-maker",
@@ -75,5 +75,5 @@
   },
   "name": "ai-logo-maker",
   "schema_version": 1,
-  "version": "0.2.5"
+  "version": "0.2.6"
 }
