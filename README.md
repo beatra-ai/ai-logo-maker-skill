@@ -1,6 +1,8 @@
 # AI Logo Maker Skill
 
-English | [简体中文](./README.zh-CN.md)
+English | [简体中文](./README.zh-CN.md) | [日本語](./README.ja.md)
+
+> 👉 See also [AI Poster Maker Skill](https://github.com/beatra-ai/ai-poster-maker-skill)
 
 Turn a brand name, industry, or reference image into logo concepts and a scalable brand mark, from inside Claude Code, Cursor, Codex, Windsurf, Cline, or OpenClaw.
 
@@ -54,6 +56,12 @@ Install the ai-logo-maker skill from https://github.com/beatra-ai/ai-logo-maker-
 <p align="center"><img src="assets/demo-2.webp" width="800" alt="The chosen Brightmoss bean-and-leaf direction refined into an app icon and a horizontal wordmark lockup. AI-generated with Beatra."></p>
 
 *The chosen Brightmoss bean-and-leaf direction refined into an app icon and a horizontal wordmark lockup. AI-generated with Beatra.*
+
+Ask your agent:
+
+```text
+Take the approved Brightmoss bean-and-leaf logo and turn it into an app icon on a deep forest green rounded square plus a horizontal wordmark lockup, both on the same warm cream background.
+```
 
 Prompt:
 

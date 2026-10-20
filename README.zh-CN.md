@@ -1,6 +1,8 @@
 # AI Logo Maker Skill
 
-[English](./README.md) | 简体中文
+[English](./README.md) | 简体中文 | [日本語](./README.ja.md)
+
+> 👉 也看看 [AI Poster Maker Skill](https://github.com/beatra-ai/ai-poster-maker-skill)
 
 输入品牌名、行业或参考图，生成多个 Logo 方向并打磨成可缩放的品牌标识，在 Claude Code、Cursor、Codex、Windsurf、Cline 或 OpenClaw 里直接完成。
 
@@ -52,6 +54,12 @@ gh skill install beatra-ai/ai-logo-maker-skill ai-logo-maker
 <p align="center"><img src="assets/demo-2.webp" width="800" alt="选定的 Brightmoss 咖啡豆嫩叶方向，进一步细化为 App 图标和横版文字组合标。由 Beatra AI 生成。"></p>
 
 *选定的 Brightmoss 咖啡豆嫩叶方向，进一步细化为 App 图标和横版文字组合标。由 Beatra AI 生成。*
+
+在你的 Agent 里这样说：
+
+```text
+把已定稿的 Brightmoss 豆与叶 Logo 做成一个深墨绿圆角方形的 App 图标，再配一个横版文字标组合，两者放在同一张暖米色背景上。
+```
 
 提示词：
 
