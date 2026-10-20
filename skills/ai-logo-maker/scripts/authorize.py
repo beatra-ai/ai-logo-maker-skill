@@ -39,7 +39,7 @@ DEVICE_AUTHORIZATION_PATH = "/oauth/device_authorization"
 TOKEN_PATH = "/oauth/token"
 PACKAGE_SLUG = "ai-logo-maker"
 PACKAGE_DISPLAY_NAME = "AI Logo Maker"
-PACKAGE_VERSION = "0.2.6"
+PACKAGE_VERSION = "0.2.7"
 CLIENT_ID = f"beatra-skill-{PACKAGE_SLUG}"
 GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code"
 SCOPE = (
@@ -677,10 +677,7 @@ def write_host_config(state_dir: Path, *, platform: str, device_name: str | None
         payload: dict[str, Any] = {"platform": platform}
         if device_name:
             payload["device_name"] = device_name
-        (state_dir / "host.json").write_text(
-            json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n",
-            encoding="utf-8",
-        )
+        _atomic_json(state_dir / "host.json", payload)
     except OSError:
         pass
 

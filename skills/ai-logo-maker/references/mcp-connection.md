@@ -50,7 +50,7 @@ network, run `network --use cn` (mainland China) or `network --use ai`
 refuses otherwise; packages of the `cn` channel refuse `--use`. If commands start failing to connect after a network was
 chosen this way, run `network --use auto`. A request that failed is never
 resent on the other network; the next command decides again unless a network was chosen with
-`network --use`.
+`network --use`. A chosen network also keeps the version-list check on it.
 
 On the mainland China network the approval page offers WeChat, phone and email
 sign-in. If the user cannot find their sign-in method, or wants to sign in with

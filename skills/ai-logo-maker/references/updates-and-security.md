@@ -20,8 +20,9 @@ Requests use HTTPS and follow this computer's network route, described in
 [MCP connection](mcp-connection.md): the international hosts, or the mainland
 China hosts `mcp.beatra.cn`, `api.beatra.cn`, and `www.beatra.cn`. When you
 choose to upload a local file, it goes only to the one-time upload address
-Beatra issues for that upload. Choosing the network, or retrying the version
-list once, may send a small request to the other network.
+Beatra issues for that upload. Choosing the network may send a small request
+to the other network, and so may retrying the version list once, unless a
+network was chosen with `network --use`.
 
 ## What is stored on this computer
 
@@ -30,7 +31,7 @@ These files are written under `~/.beatra/`. On POSIX that directory is mode
 
 - `credentials.json` (POSIX mode 0600), written by `scripts/authorize.py`: the device credential.
 - `installation.json` (POSIX mode 0600), written by `scripts/authorize.py`: the stable installation reference.
-- `host.json`, written by `scripts/authorize.py`: the agent environment, and a device name when one is known.
+- `host.json` (POSIX mode 0600), written by `scripts/authorize.py`: the agent environment, and a device name when one is known.
 - `network.json` (POSIX mode 0600), written by `scripts/mcp_client.py`: this computer's network route.
 - `skills.json` (POSIX mode 0600), written by `scripts/authorize.py` and `scripts/mcp_client.py`: which Beatra skills are installed here, with the slug, agent environment, install path, and time.
 - `pending_authorization.json` (POSIX mode 0600), written by `scripts/authorize.py`: an approval that is still open. Removed when that approval is collected or discarded.
@@ -55,8 +56,10 @@ stored. If Beatra refuses, it changes nothing so the run can be repeated.
 Otherwise it unlinks exactly these names in `~/.beatra/`: `credentials.json`,
 `installation.json`, `host.json`, `skills.json`, `registrations.json`,
 `network.json`, `balance-holds.json`, `pending_authorization.json`, and
-`.authorize.lock`. It then removes `~/.beatra/` only when that directory is
-empty. It does not remove `~/.beatra/updates/` or anything inside it. These
+`.authorize.lock`. It also unlinks `state.json`, `registration.json`, and
+`source.json` in each installation directory under `~/.beatra/updates/`. It
+then removes each of those directories, `~/.beatra/updates/`, and `~/.beatra/`
+only when that directory is empty. These
 scripts do not create `registrations.json`; uninstall still unlinks that name
 if it is present. The script never deletes the installed Skill directory. It
 names that directory in `delete_next` for the caller to delete. If another

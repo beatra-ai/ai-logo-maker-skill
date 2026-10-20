@@ -31,12 +31,13 @@ sys.dont_write_bytecode = True  # never leave __pycache__ inside the installed S
 REVOKE_PATH = "/oauth/device/revoke"
 PACKAGE_SLUG = "ai-logo-maker"
 PACKAGE_DISPLAY_NAME = "AI Logo Maker"
-PACKAGE_VERSION = "0.2.6"
+PACKAGE_VERSION = "0.2.7"
 HTTP_USER_AGENT = f"Beatra-Skill/{PACKAGE_SLUG}/{PACKAGE_VERSION}"
 
 #: Everything the connection owns inside ~/.beatra. Removal unlinks exactly
-#: these and then removes the directory only if it is empty — the script
-#: never recursively deletes a directory it does not fully understand.
+#: these and the update records below, then removes each directory only if it
+#: is empty — the script never recursively deletes a directory it does not
+#: fully understand.
 _STATE_FILES = (
     "credentials.json",
     "installation.json",
@@ -48,6 +49,13 @@ _STATE_FILES = (
     "pending_authorization.json",
     ".authorize.lock",
 )
+
+#: The per-install records in ~/.beatra/updates/<id>/: the version check,
+#: install source and registration, and a domestic channel's update lock. Only
+#: these names leave; an interrupted update's transaction stays, and so does
+#: every directory that still holds something.
+_UPDATE_RECORD_FILES = ("state.json", "source.json", "registration.json", "update.lock")
+_UPDATE_RECORD_DIGITS = frozenset("0123456789abcdef")
 
 PostRevoke = Callable[[str, str], int]
 
@@ -156,12 +164,44 @@ def _provably_deleted(install_path: str) -> bool:
     return True
 
 
+def _remove_update_records(state_dir: Path) -> None:
+    updates = state_dir / "updates"
+    try:
+        if updates.is_symlink() or not updates.is_dir():
+            return
+        records = [
+            child
+            for child in updates.iterdir()
+            if len(child.name) == 24
+            and set(child.name) <= _UPDATE_RECORD_DIGITS
+            and not child.is_symlink()
+            and child.is_dir()
+        ]
+    except OSError:
+        return
+    for record in records:
+        for name in _UPDATE_RECORD_FILES:
+            try:
+                (record / name).unlink(missing_ok=True)
+            except OSError:
+                pass
+        try:
+            record.rmdir()
+        except OSError:
+            pass
+    try:
+        updates.rmdir()
+    except OSError:
+        pass
+
+
 def _remove_local_state(state_dir: Path) -> None:
     for name in _STATE_FILES:
         try:
             (state_dir / name).unlink(missing_ok=True)
         except OSError:
             pass
+    _remove_update_records(state_dir)
     try:
         state_dir.rmdir()
     except OSError:

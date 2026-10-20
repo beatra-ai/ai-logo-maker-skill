@@ -31,7 +31,7 @@ sys.dont_write_bytecode = True  # never leave __pycache__ inside the installed S
 PROTOCOL_VERSION = "2025-11-25"
 PACKAGE_SLUG = "ai-logo-maker"
 PACKAGE_DISPLAY_NAME = "AI Logo Maker"
-PACKAGE_VERSION = "0.2.6"
+PACKAGE_VERSION = "0.2.7"
 PACKAGE_CHANNEL = "canonical"
 PACKAGE_LOCALE = "en"
 PACKAGE_DISCOVERY_URL = "https://beatra.ai/skills/ai-logo-maker/install.json"
@@ -467,6 +467,13 @@ def current_route(state_dir: Path | None = None) -> str:
     return "ai"
 
 
+def _route_pinned() -> bool:
+    """Whether `network --use` locked the network this process decided."""
+
+    state_dir = _ROUTE_STATE_DIR
+    return state_dir is not None and _read_network(state_dir).get("pinned") is True
+
+
 def route_mcp_url(route: str) -> str:
     return f"https://{ROUTE_HOSTS[route][0]}/mcp"
 
@@ -494,13 +501,14 @@ def _update_get(
 ) -> bytes:
     """GET one update object, named by its identity URL, over the route. Update
     objects are verified by checksum, so under the auto policy a failure may
-    retry once over the other route (spec §5.5); business requests never do."""
+    retry once over the other route (spec §5.5); business requests never do,
+    and neither does anything once the user pinned a network."""
 
     chosen = route or current_route()
     try:
         return get_bytes(transport(url, chosen), timeout, limit)
     except Exception:  # any failure on this route may be tried on the other
-        if route_policy() != "auto":
+        if route_policy() != "auto" or _route_pinned():
             raise
         other = "cn" if chosen == "ai" else "ai"
         return get_bytes(transport(url, other), timeout, limit)
