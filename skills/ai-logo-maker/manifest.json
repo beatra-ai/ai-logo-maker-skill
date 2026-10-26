@@ -1,5 +1,5 @@
 {
-  "changelog": "A new icon for this Skill. The helper shared by all Beatra Skills now keeps its connection file readable only by your account, clears its update records when you disconnect the last Beatra Skill, and stays on the network route you picked when an update check fails.",
+  "changelog": "The helper shared by all Beatra Skills now runs its connection step at most twice in one turn. While your approval is still pending, the Skill delivers the part of your request that needs no connection and continues the paid step on your next message after Allow.",
   "display_name": "AI Logo Maker",
   "entry": "SKILL.md",
   "homepage": "https://beatra.ai/skills/ai-logo-maker",
@@ -46,7 +46,7 @@
       "title": "AI ロゴメーカー：ロゴ生成とブランドマークデザイン"
     },
     "zh": {
-      "description": "输入品牌名称、行业方向或参考图,生成专业 AI Logo、品牌标识和应用图标。这款 AI logo 设计工具从你的品牌简报出发——公司名、行业气质、配色偏好——先探索多个设计方向,再用精确品牌色、简洁几何和可缩放构图精修最强概念。制作企业 logo、创业公司标志、字母标、徽章和组合标识,从网站 favicon 到门头招牌都清晰可辨。从文字描述出发,将已有草图和品牌素材转化为精致标识,或在已认可草稿上做定向精修。",
+      "description": "输入品牌名称、行业方向或参考图,生成专业 AI Logo、品牌标识和应用图标。这款 AI logo 设计工具从你的品牌简报出发——公司名、行业气质、配色偏好——先探索多个商标设计方向,再用精确品牌色、简洁几何和可缩放构图精修最强概念。制作企业 logo、创业公司标志、字母标、徽章、组合标识和 VI设计中的主标,从网站 favicon 到门头招牌都清晰可辨。从文字描述出发,将已有草图和品牌素材转化为精致标识,或在已认可草稿上做定向精修。",
       "display_name": "AI Logo设计·品牌标识创作",
       "summary": "输入品牌名称、行业方向或参考图,生成专业 AI Logo、品牌标识和应用图标,支持多变体探索、精确品牌色和可缩放构图。",
       "tags": [
@@ -75,5 +75,5 @@
   },
   "name": "ai-logo-maker",
   "schema_version": 1,
-  "version": "0.2.7"
+  "version": "0.2.9"
 }

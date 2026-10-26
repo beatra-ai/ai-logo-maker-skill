@@ -67,10 +67,12 @@ Act on how each run ends:
 - `BEATRA_AUTH_PENDING` (exit status 3) — the run ended before the user selected
   Allow: the approval page had not been opened yet, the run's wait ran out, or
   the run was stopped. Show the approval link to the user as described below if
-  you have not already, and again if the link is different. Then run the same
-  command again: it continues the same approval, so the user approves only
-  once. When the message says Beatra could not be reached, tell the user the
-  connection is being retried instead of asking them to approve again.
+  you have not already, and again if the link is different. Run the same command
+  at most twice in one turn; it continues the same approval, so the user
+  approves only once. When it is still pending after that, deliver what needs
+  no connection (below) and stop. When the message says Beatra could not be
+  reached, tell the user the connection is being retried instead of asking them
+  to approve again.
 - `BEATRA_AUTH_IN_PROGRESS` (exit status 3) — another run on this computer is
   starting an approval right now. Run the same command again in a moment; it
   continues that approval.
@@ -81,9 +83,10 @@ Act on how each run ends:
   before the user selected Allow. Tell the user; if they still want to
   connect, run the same command again and share the new approval link.
 
-If a run was stopped anyway, for example by a timeout or an interrupted tool
-call, run the same command again: it continues the approval that is already
-open.
+A run stopped by a timeout or an interrupted tool call counts as one of the
+two runs in the turn: run the same command again once, since it continues the
+approval that is already open, and after a second stop deliver what needs no
+connection and stop.
 
 An approval does not depend on a run being active when the user selects Allow.
 Beatra keeps it, and every Beatra command collects it first: when the user
@@ -92,6 +95,17 @@ request) and the connection completes without a second approval. So if the
 user interrupts to ask something else, stop the helper and answer them; and if
 they do not want to connect now, stop waiting — the link stays valid for a
 while.
+
+#### Deliver while the approval is pending
+
+When the approval is still pending at the end of a turn, finish and deliver
+everything in the request that needs no connection, in the format the user
+asked for — the Skill's root names it for each kind of work: the prepared
+text, prompt, lyrics, shot list, or selection criteria. Say in one line that
+the paid step continues on their next message after Allow, because the next
+Beatra command collects the approval. Do not fill the gap with another tool or
+service, and do not name voices, models, prices, or results that no live call
+returned.
 
 When telling the user what to do:
 

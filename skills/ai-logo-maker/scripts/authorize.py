@@ -39,7 +39,7 @@ DEVICE_AUTHORIZATION_PATH = "/oauth/device_authorization"
 TOKEN_PATH = "/oauth/token"
 PACKAGE_SLUG = "ai-logo-maker"
 PACKAGE_DISPLAY_NAME = "AI Logo Maker"
-PACKAGE_VERSION = "0.2.7"
+PACKAGE_VERSION = "0.2.9"
 CLIENT_ID = f"beatra-skill-{PACKAGE_SLUG}"
 GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code"
 SCOPE = (
@@ -200,17 +200,19 @@ class _ApprovalPending(Exception):
                 f"Approval page: {self.verification_url}\n"
                 "Share this link with the user if you have not already (it may "
                 "already be open in their browser). Then run this same command "
-                "again right away: it continues this same approval, so the user "
-                "never approves twice. Repeat until it prints \"Beatra is ready\". "
-                "Signing in or creating an account can take a few minutes; keep "
-                "running it until then."
+                "again right away, once more in this turn, only if you have not already "
+                "retried it; it continues this same approval, so the user never approves "
+                "twice. If it is still pending after that retry, go on with the part of the "
+                "request that needs no connection and run it again when the user writes next."
             )
         if self.unopened:
             return (
                 f"{AUTH_PENDING_CODE}: The approval page has not been opened yet. "
                 f"Show this link to the user in the chat now: {self.verification_url}\n"
-                "Then run this same command again: it continues this same approval, so "
-                "the user never approves twice, and waits for Allow."
+                "Then run this same command again once more in this turn, only if you have "
+                "not already retried it; it continues this same approval, so the user never "
+                "approves twice. If it is still pending after that retry, go on with the part "
+                "of the request that needs no connection and run it again when the user writes next."
                 + (
                     " If the user approves while nothing is running, Beatra connects "
                     "automatically the next time you use it."
@@ -228,9 +230,11 @@ class _ApprovalPending(Exception):
         return (
             f"{AUTH_PENDING_CODE}: {lead}. Approval page: {self.verification_url}\n"
             "Show this link to the user in the chat if you have not already (it may "
-            "already be open in their browser). Then run this same command again: "
-            "it continues this same approval, so the user never approves twice, and "
-            "waits for Allow." + later
+            "already be open in their browser). Then run this same command again once "
+            "more in this turn, only if you have not already retried it; it continues this "
+            "same approval, so the user never approves twice. If it is still pending after "
+            "that retry, go on with the part of the request that needs no connection and run "
+            "it again when the user writes next." + later
         )
 
 
