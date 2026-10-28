@@ -1,0 +1,26 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ai-logo-maker",
+  "version": "0.2.9",
+  "description": "Turn a brand name, industry, or reference image into a professional AI logo, brand mark, or app icon with multi-concept exploration, precise brand colors, and scalable composition.",
+  "author": {
+    "name": "Beatra AI",
+    "url": "https://github.com/beatra-ai"
+  },
+  "homepage": "https://beatra.ai/skills/ai-logo-maker",
+  "repository": "https://github.com/beatra-ai/ai-logo-maker-skill",
+  "license": "MIT-0",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "AI Logo Maker",
+        "shortDescription": "Logos, brand marks, app icons",
+        "longDescription": "Turn a brand name, industry, or reference image into a professional AI logo, brand mark, or app icon. This AI logo maker and logo generator explores multiple design directions from your brand brief—company name, industry feel, and color preferences—then refines the strongest concept with precise brand colors, clean geometry, and scalable composition. Create business logos, startup logos, monograms, emblems, and combination marks that stay sharp from favicon to storefront sign. Start from a text description, transform existing sketches and brand assets into a polished mark, or refine an accepted draft toward a publish-ready result.",
+        "developerName": "Beatra AI",
+        "category": "Creativity",
+        "websiteURL": "https://beatra.ai/skills/ai-logo-maker",
+        "logo": "./assets/icon.png"
+      }
+    }
+  }
+}

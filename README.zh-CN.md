@@ -35,6 +35,33 @@
 npx skills add beatra-ai/ai-logo-maker-skill
 ```
 
+作为 Claude Code 插件：
+
+```bash
+claude plugin marketplace add beatra-ai/ai-logo-maker-skill
+claude plugin install ai-logo-maker@ai-logo-maker-skill
+```
+
+作为 Codex 插件：
+
+```bash
+codex plugin marketplace add beatra-ai/ai-logo-maker-skill
+codex plugin add ai-logo-maker@ai-logo-maker-skill
+```
+
+作为 GitHub Copilot CLI 插件：
+
+```bash
+copilot plugin marketplace add beatra-ai/ai-logo-maker-skill
+copilot plugin install ai-logo-maker@ai-logo-maker-skill
+```
+
+作为 Gemini CLI 扩展：
+
+```bash
+gemini extensions install https://github.com/beatra-ai/ai-logo-maker-skill
+```
+
 使用 GitHub CLI：
 
 ```bash

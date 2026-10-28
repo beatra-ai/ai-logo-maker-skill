@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "ai-logo-maker",
+  "displayName": "AI Logo Maker",
+  "version": "0.2.9",
+  "description": "Turn a brand name, industry, or reference image into a professional AI logo, brand mark, or app icon with multi-concept exploration, precise brand colors, and scalable composition.",
+  "author": {
+    "name": "Beatra AI",
+    "url": "https://github.com/beatra-ai"
+  },
+  "homepage": "https://beatra.ai/skills/ai-logo-maker",
+  "repository": "https://github.com/beatra-ai/ai-logo-maker-skill",
+  "license": "MIT-0",
+  "icon": "./assets/icon.png"
+}
