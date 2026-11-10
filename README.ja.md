@@ -62,6 +62,12 @@ Gemini CLI 拡張機能として：
 gemini extensions install https://github.com/beatra-ai/ai-logo-maker-skill
 ```
 
+Antigravity CLI プラグインとして：
+
+```bash
+agy plugin install https://github.com/beatra-ai/ai-logo-maker-skill
+```
+
 GitHub CLI を使う場合：
 
 ```bash
@@ -93,6 +99,15 @@ https://github.com/beatra-ai/ai-logo-maker-skill から ai-logo-maker スキル�
 ```text
 Refine this accepted Brightmoss logo into a two-part brand presentation on one flat warm cream background (#F4EEE2). Left: an app icon, a solid rounded square in deep forest green (#1F4D3A) with the same coffee-bean-and-leaf symbol from the image centered inside in cream, generous padding, no text in the icon. Right: a horizontal lockup, the same green bean-and-leaf symbol placed to the left of the exact word "Brightmoss" in the same bold humanist sans-serif lettering, forest green, vertically centered with the symbol. Keep the symbol shape and the wordmark letterforms identical to the source. Flat vector, maximum two colors, no gradients, no shadows, no mockup, no tagline, no other text.
 ```
+
+## 入力と出力
+
+| | 種類 | 形式 | 仕様 |
+| --- | --- | --- | --- |
+| **入力** | テキスト：ブランド名、業種、カラーの希望 | — | — |
+| **入力** | 画像：スケッチ、ムードボード、既存のブランド素材（任意） | JPG、PNG、WEBP | 1 リクエストあたり最大 4 枚 |
+| **出力** | 画像：正方形マスターのロゴ案 | PNG | 1 リクエストあたり最大 4 枚／2K／アスペクト比 1:1 |
+| **出力** | 動画：ロゴのアニメーション動画（任意） | MP4 | — |
 
 ## 技術仕様と出力上限
 
@@ -133,15 +148,15 @@ Refine this accepted Brightmoss logo into a two-part brand presentation on one f
 
 ### 小さな favicon でも鮮明ですか？
 
-すべてのコンセプトは小サイズでの明瞭さを前提に構成されています。強いシルエット、高コントラスト、最小限のディテール。サムネイルサイズで結果を確認してから確定してください。
+すべての案を、強いシルエット、高いコントラスト、最小限のディテールで小さなサイズ向けに作るので、favicon にも使えます。
 
 ### 既存のブランドカラーに合わせられますか？
 
-はい。hex カラー値を提供すると、ロゴ生成はそれをパレットの基盤として使用し、正確な加重カラー制御を実現します。
+はい。hex のカラー値を伝えると、その色をロゴの配色に使います。
 
 ### 既にあるロゴを改良できますか？
 
-はい。既存のロゴやスケッチをアップロードし、変更点を説明すると、全体的な方向を保ちながら特定の要素を調整する洗練処理が行われます。
+はい。既存のロゴやスケッチをアップロードして変えたい点を伝えると、これまでの方向性の中で、その部分を調整します。
 
 ## 更新とセキュリティ
 
@@ -151,7 +166,9 @@ Refine this accepted Brightmoss logo into a two-part brand presentation on one f
 
 ## ライセンス
 
-[MIT-0](LICENSE)：商用を含め、自由に使用・改変・再配布できます。クレジット表記は不要です。ClawHub 上のこれらのスキルと同じ条件です。
+このリポジトリのスキルファイル（`SKILL.md`、リファレンス、スクリプト）とこの README は [MIT-0](LICENSE) で提供しています。商用を含め、自由に使用・改変・再配布でき、クレジット表記は不要です。
+
+生成は Beatra のクラウドサービスで行われ、[Beatra 利用規約](https://beatra.ai/terms?utm_source=github&utm_medium=flagship&utm_campaign=ai-logo-maker-skill)が適用されます。
 
 ## リンク
 

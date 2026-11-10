@@ -62,6 +62,12 @@ As a Gemini CLI extension:
 gemini extensions install https://github.com/beatra-ai/ai-logo-maker-skill
 ```
 
+As an Antigravity CLI plugin:
+
+```bash
+agy plugin install https://github.com/beatra-ai/ai-logo-maker-skill
+```
+
 With the GitHub CLI:
 
 ```bash
@@ -95,6 +101,15 @@ Prompt:
 ```text
 Refine this accepted Brightmoss logo into a two-part brand presentation on one flat warm cream background (#F4EEE2). Left: an app icon, a solid rounded square in deep forest green (#1F4D3A) with the same coffee-bean-and-leaf symbol from the image centered inside in cream, generous padding, no text in the icon. Right: a horizontal lockup, the same green bean-and-leaf symbol placed to the left of the exact word "Brightmoss" in the same bold humanist sans-serif lettering, forest green, vertically centered with the symbol. Keep the symbol shape and the wordmark letterforms identical to the source. Flat vector, maximum two colors, no gradients, no shadows, no mockup, no tagline, no other text.
 ```
+
+## Inputs and outputs
+
+| | Type | Formats | Specifications |
+| --- | --- | --- | --- |
+| **Input** | Text — Brand name, industry, and color preferences | — | — |
+| **Input** | Image — Sketches, mood boards, or brand assets (optional) | JPG, PNG, WEBP | up to 4 images per request |
+| **Output** | Image — Logo concepts on a square master canvas | PNG | up to 4 images per request; 2K; aspect ratios 1:1 |
+| **Output** | Video — Animated logo clip (optional) | MP4 | — |
 
 ## Technical Specifications & Output Limits
 
@@ -144,15 +159,15 @@ Wordmarks, lettermarks, pictorial marks, abstract marks, monograms, emblems, and
 
 ### Will my logo work as a tiny favicon?
 
-Every concept is composed for small-size legibility with strong silhouettes, high contrast, and minimal detail. Review the result at thumbnail size before finalizing.
+Every concept is composed for small sizes, with a strong silhouette, high contrast, and minimal detail, for use as a favicon.
 
 ### Can I match my existing brand colors?
 
-Yes. Provide hex color values and the logo generation uses them as the palette foundation, with precise weighted color control.
+Yes. Share the hex values and they become the logo's palette.
 
 ### Can I refine a logo I already have?
 
-Yes. Upload the existing logo or sketch, describe what to change, and the refinement preserves the overall direction while adjusting specific elements.
+Yes. Upload the existing logo or sketch and describe what to change; the refinement adjusts those elements within the logo's overall direction.
 
 ## Updates and security
 
@@ -163,9 +178,10 @@ Details: `references/updates-and-security.md` inside the skill.
 
 ## License
 
-[MIT-0](LICENSE) — free to use, modify, and redistribute, including
-commercially. No attribution required. Same terms as these skills carry on
-ClawHub.
+The skill files in this repository (`SKILL.md`, references, and scripts) and this README are licensed under
+[MIT-0](LICENSE): free to use, modify, and redistribute, including commercially, with no attribution required.
+
+Media generation runs on Beatra's cloud service under the [Beatra Terms of Service](https://beatra.ai/terms?utm_source=github&utm_medium=flagship&utm_campaign=ai-logo-maker-skill).
 
 ## Links
 

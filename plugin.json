@@ -10,6 +10,20 @@
   "homepage": "https://beatra.ai/skills/ai-logo-maker",
   "repository": "https://github.com/beatra-ai/ai-logo-maker-skill",
   "license": "MIT-0",
+  "keywords": [
+    "AI logo maker",
+    "logo generator",
+    "AI logo design",
+    "logo creator",
+    "brand logo",
+    "business logo",
+    "company logo",
+    "startup logo",
+    "app icon",
+    "brand mark design",
+    "monogram logo",
+    "custom logo design"
+  ],
   "extensions": {
     "com.openai": {
       "interface": {
@@ -19,6 +33,13 @@
         "developerName": "Beatra AI",
         "category": "Creativity",
         "websiteURL": "https://beatra.ai/skills/ai-logo-maker",
+        "supportURL": "https://github.com/beatra-ai/.github/blob/main/SUPPORT.md",
+        "privacyPolicyURL": "https://beatra.ai/privacy",
+        "termsOfServiceURL": "https://beatra.ai/terms",
+        "defaultPrompt": [
+          "Use AI Logo Maker to explore logo concepts for Quietwick, my handmade candle brand: warm orange, clear at favicon size."
+        ],
+        "composerIcon": "./assets/icon.png",
         "logo": "./assets/icon.png"
       }
     }

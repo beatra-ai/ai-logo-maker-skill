@@ -9,5 +9,19 @@
   "homepage": "https://beatra.ai/skills/ai-logo-maker",
   "repository": "https://github.com/beatra-ai/ai-logo-maker-skill",
   "license": "MIT-0",
+  "keywords": [
+    "AI logo maker",
+    "logo generator",
+    "AI logo design",
+    "logo creator",
+    "brand logo",
+    "business logo",
+    "company logo",
+    "startup logo",
+    "app icon",
+    "brand mark design",
+    "monogram logo",
+    "custom logo design"
+  ],
   "logo": "assets/icon.png"
 }

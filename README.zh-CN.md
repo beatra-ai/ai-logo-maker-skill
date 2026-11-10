@@ -62,6 +62,12 @@ copilot plugin install ai-logo-maker@ai-logo-maker-skill
 gemini extensions install https://github.com/beatra-ai/ai-logo-maker-skill
 ```
 
+作为 Antigravity CLI 插件：
+
+```bash
+agy plugin install https://github.com/beatra-ai/ai-logo-maker-skill
+```
+
 使用 GitHub CLI：
 
 ```bash
@@ -93,6 +99,15 @@ gh skill install beatra-ai/ai-logo-maker-skill ai-logo-maker
 ```text
 Refine this accepted Brightmoss logo into a two-part brand presentation on one flat warm cream background (#F4EEE2). Left: an app icon, a solid rounded square in deep forest green (#1F4D3A) with the same coffee-bean-and-leaf symbol from the image centered inside in cream, generous padding, no text in the icon. Right: a horizontal lockup, the same green bean-and-leaf symbol placed to the left of the exact word "Brightmoss" in the same bold humanist sans-serif lettering, forest green, vertically centered with the symbol. Keep the symbol shape and the wordmark letterforms identical to the source. Flat vector, maximum two colors, no gradients, no shadows, no mockup, no tagline, no other text.
 ```
+
+## 输入与输出
+
+| | 类型 | 格式 | 规格 |
+| --- | --- | --- | --- |
+| **输入** | 文本：品牌名称、行业和配色偏好 | — | — |
+| **输入** | 图片：草图、情绪板或已有品牌素材（可选） | JPG、PNG、WEBP | 单次最多 4 张 |
+| **输出** | 图片：方形主稿上的 Logo 方案 | PNG | 单次最多 4 张；2K；画幅 1:1 |
+| **输出** | 视频：Logo 动画短片（可选） | MP4 | — |
 
 ## 技术规格与输出限制
 
@@ -136,21 +151,21 @@ Refine this accepted Brightmoss logo into a two-part brand presentation on one f
 
 ## 常见问题
 
-### 我可以创建哪些 logo 风格?
+### 我可以做哪些 Logo 风格？
 
-文字标、字母标、图形标、抽象标、徽章和组合标。分享品牌名称、行业和想要的感觉,工具会推荐最适合的风格。
+文字标、字母标、图形标、抽象标、字母组合、徽章和组合标都可以。告诉它品牌名称、行业和想要的感觉，它会推荐最合适的风格。
 
-### 我的 logo 在很小的 favicon 上也清晰吗?
+### 我的 Logo 在很小的 favicon 上也清晰吗？
 
-每个概念都以小尺寸可辨认为目标设计——强轮廓、高对比度和最少细节。在缩略图大小检查结果后再定稿。
+每个方案都按小尺寸可辨认来设计：轮廓强、对比度高、细节少，适合用作网站图标。
 
-### 我能匹配已有的品牌色吗?
+### 能用上我已有的品牌色吗？
 
-可以。提供 hex 颜色值,logo 生成将以它们为调色板基础,实现精确的加权颜色控制。
+可以。提供 hex 色值，Logo 就用这些颜色配色。
 
-### 我能改进已有的 logo 吗?
+### 能在我已有的 Logo 上改吗？
 
-可以。上传已有 logo 或草图,描述需要改变的地方,精修会保留整体方向同时调整具体元素。
+可以。上传已有的 Logo 或草图，说明要改哪里，精修就在原有整体方向上调整你说的部分。
 
 ## 更新与安全
 
@@ -160,7 +175,9 @@ Refine this accepted Brightmoss logo into a two-part brand presentation on one f
 
 ## 许可证
 
-[MIT-0](LICENSE)：可自由使用、修改和再分发，包括商用，无需署名；与这些 skill 在 ClawHub 上的条款一致。
+本仓库的 Skill 文件（`SKILL.md`、参考文档和脚本）与本 README 采用 [MIT-0](LICENSE) 许可：可自由使用、修改和再分发，包括商用，无需署名。
+
+内容生成在 Beatra 云端完成，适用 [Beatra 服务条款](https://www.beatra.cn/terms?utm_source=github&utm_medium=flagship&utm_campaign=ai-logo-maker-skill)。
 
 ## 相关链接
 
