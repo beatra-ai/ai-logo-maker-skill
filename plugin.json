@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ai-logo-maker",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "description": "Turn a brand name, industry, or reference image into a professional AI logo, brand mark, or app icon with multi-concept exploration, precise brand colors, and scalable composition.",
   "author": {
     "name": "Beatra AI",

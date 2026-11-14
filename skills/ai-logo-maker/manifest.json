@@ -1,5 +1,5 @@
 {
-  "changelog": "The helper shared by all Beatra Skills now runs its connection step at most twice in one turn. While your approval is still pending, the Skill delivers the part of your request that needs no connection and continues the paid step on your next message after Allow.",
+  "changelog": "Removes a retired follow-up suggestion after you accept a finished logo; Founder IP Avatar Studio and the 5-second motion logo intro remain as before.",
   "display_name": "AI Logo Maker",
   "entry": "SKILL.md",
   "homepage": "https://beatra.ai/skills/ai-logo-maker",
@@ -75,5 +75,5 @@
   },
   "name": "ai-logo-maker",
   "schema_version": 1,
-  "version": "0.2.9"
+  "version": "0.3.0"
 }
