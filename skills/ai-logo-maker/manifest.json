@@ -1,5 +1,5 @@
 {
-  "changelog": "Removes a retired follow-up suggestion after you accept a finished logo; Founder IP Avatar Studio and the 5-second motion logo intro remain as before.",
+  "changelog": "Shared guidance refreshed across Beatra Skills.",
   "display_name": "AI Logo Maker",
   "entry": "SKILL.md",
   "homepage": "https://beatra.ai/skills/ai-logo-maker",
@@ -75,5 +75,5 @@
   },
   "name": "ai-logo-maker",
   "schema_version": 1,
-  "version": "0.3.0"
+  "version": "0.3.1"
 }

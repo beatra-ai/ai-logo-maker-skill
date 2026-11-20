@@ -71,6 +71,22 @@ script):
   check that lifts the hold once the user says they have topped up. If the user
   chose a cheaper request instead, run that cheaper call once with
   `--recheck-balance`. Never put `--recheck-balance` in a loop or script.
+- Some refusals also name another way forward (`details.recovery.alternative`;
+  the message states it in words). Relay it in the message's words with the
+  top-up option and do not call again on your own. Choosing it is new work, not
+  a retry: submit the request it describes once, with a new
+  `client_request_id`; `charges_now_credits` is what that submission charges.
+  When it is 0, the user's choice is the approval; above 0, show a card with
+  that price first.
+  Choosing it replaces the refused request: drop that request and its
+  `client_request_id`, never replay it after a later top-up, and continue from
+  the new request's result.
+  When its result waits for the user (for example a voice with status
+  `pending_activation` and its activation price), present the result and its
+  price, and continue only after the user agrees. This applies even where a
+  production card's balance line says only to wait for a top-up. The bundled
+  client does not hold the tool after a refusal that carries `details.offer`,
+  such as the free voice preview.
 - Idempotency conflict: the request identity was reused with different
   arguments. Do not retry it. Keep the original task if it exists, or use a new
   `client_request_id` only for user-approved changed work.
